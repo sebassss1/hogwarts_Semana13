@@ -1,27 +1,41 @@
 package com.example.hogwarts.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
+@Table(name = "asignatura")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Asignatura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_asignatura")
     private Long id;
 
     private String nombre;
 
-    @ManyToOne
-    @JoinColumn(name = "profesor_id")
-    @JsonBackReference
-    private Profesor profesor;
+    private String aula;
+
+    private Boolean obligatoria;
+
+    @OneToMany(mappedBy = "asignatura")
+    @JsonManagedReference
+    private List<Profesor> profesores;
 
     @ManyToMany(mappedBy = "asignaturas")
     @JsonBackReference
-    private List<Student> estudiantes;
+    private List<Estudiante> estudiantes;
 
     // getters y setters
 }

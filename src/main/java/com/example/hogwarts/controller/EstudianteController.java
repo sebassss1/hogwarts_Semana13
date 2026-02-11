@@ -1,7 +1,8 @@
 package com.example.hogwarts.controller;
 
-import com.example.hogwarts.model.Student;
-import com.example.hogwarts.service.StudentService;
+import com.example.hogwarts.dto.EstudianteDTO;
+import com.example.hogwarts.model.Estudiante;
+import com.example.hogwarts.service.EstudianteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,36 +10,36 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hogwarts/students")
-public class StudentController {
+@RequestMapping("/hogwarts/estudiantes")
+public class EstudianteController {
 
-    private final StudentService service;
+    private final EstudianteService service;
 
-    public StudentController(StudentService service) {
+    public EstudianteController(EstudianteService service) {
         this.service = service;
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<EstudianteDTO>> getAll() {
+        return ResponseEntity.ok(service.getAllDTO());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getById(@PathVariable Long id) {
-        return service.getById(id)
+    public ResponseEntity<EstudianteDTO> getById(@PathVariable Long id) {
+        return service.getByIdDTO(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Student> create(@RequestBody Student s) {
-        Student created = service.create(s);
+    public ResponseEntity<Estudiante> create(@RequestBody Estudiante s) {
+        Estudiante created = service.create(s);
         return ResponseEntity.created(URI.create("/hogwarts/students/" + created.getIdEstudiante()))
                 .body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> update(@PathVariable Long id, @RequestBody Student s) {
+    public ResponseEntity<Estudiante> update(@PathVariable Long id, @RequestBody Estudiante s) {
         return service.update(id, s)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

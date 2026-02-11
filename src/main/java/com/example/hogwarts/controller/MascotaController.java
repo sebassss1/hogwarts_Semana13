@@ -1,7 +1,8 @@
 package com.example.hogwarts.controller;
 
-import com.example.hogwarts.model.Mascota;
-import com.example.hogwarts.repository.MascotaRepository;
+import com.example.hogwarts.dto.MascotaDTO;
+import com.example.hogwarts.service.MascotaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,14 +11,21 @@ import java.util.List;
 @RequestMapping("/hogwarts/mascotas")
 public class MascotaController {
 
-    private final MascotaRepository repo;
+    private final MascotaService service;
 
-    public MascotaController(MascotaRepository repo) {
-        this.repo = repo;
+    public MascotaController(MascotaService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<Mascota> getAll() {
-        return repo.findAll();
+    public ResponseEntity<List<MascotaDTO>> getAll() {
+        return ResponseEntity.ok(service.getAllDTO());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MascotaDTO> getById(@PathVariable Long id) {
+        return service.getByIdDTO(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

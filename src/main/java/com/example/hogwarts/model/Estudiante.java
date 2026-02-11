@@ -9,11 +9,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "students")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Table(name = "estudiante")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Student {
+public class Estudiante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,22 +36,18 @@ public class Student {
 
     // 🔗 Relación ManyToOne con Casa
     @ManyToOne
-    @JoinColumn(name = "casa_id")
+    @JoinColumn(name = "id_casa")
     @JsonBackReference
     private Casa casa;
 
     // 🔗 Relación OneToOne con Mascota
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "estudiante", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Mascota mascota;
 
     // 🔗 Relación ManyToMany con Asignatura
     @ManyToMany
-    @JoinTable(
-            name = "student_asignatura",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "asignatura_id")
-    )
+    @JoinTable(name = "estudiante_asignatura", joinColumns = @JoinColumn(name = "id_estudiante"), inverseJoinColumns = @JoinColumn(name = "id_asignatura"))
     @JsonManagedReference
     private List<Asignatura> asignaturas;
 }

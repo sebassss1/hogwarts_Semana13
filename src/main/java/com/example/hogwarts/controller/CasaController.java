@@ -1,7 +1,8 @@
 package com.example.hogwarts.controller;
 
-import com.example.hogwarts.model.Casa;
-import com.example.hogwarts.repository.CasaRepository;
+import com.example.hogwarts.dto.CasaDTO;
+import com.example.hogwarts.service.CasaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,14 +11,21 @@ import java.util.List;
 @RequestMapping("/hogwarts/casas")
 public class CasaController {
 
-    private final CasaRepository repo;
+    private final CasaService service;
 
-    public CasaController(CasaRepository repo) {
-        this.repo = repo;
+    public CasaController(CasaService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<Casa> getAll() {
-        return repo.findAll();
+    public ResponseEntity<List<CasaDTO>> getAll() {
+        return ResponseEntity.ok(service.getAllDTO());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CasaDTO> getById(@PathVariable Long id) {
+        return service.getByIdDTO(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -1,7 +1,8 @@
 package com.example.hogwarts.controller;
 
-import com.example.hogwarts.model.Asignatura;
-import com.example.hogwarts.repository.AsignaturaRepository;
+import com.example.hogwarts.dto.AsignaturaDTO;
+import com.example.hogwarts.service.AsignaturaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,14 +11,21 @@ import java.util.List;
 @RequestMapping("/hogwarts/asignaturas")
 public class AsignaturaController {
 
-    private final AsignaturaRepository repo;
+    private final AsignaturaService service;
 
-    public AsignaturaController(AsignaturaRepository repo) {
-        this.repo = repo;
+    public AsignaturaController(AsignaturaService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<Asignatura> getAll() {
-        return repo.findAll();
+    public ResponseEntity<List<AsignaturaDTO>> getAll() {
+        return ResponseEntity.ok(service.getAllDTO());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AsignaturaDTO> getById(@PathVariable Long id) {
+        return service.getByIdDTO(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
