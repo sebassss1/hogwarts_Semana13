@@ -1,14 +1,17 @@
 package com.example.hogwarts.controller;
 
+import com.example.hogwarts.dto.MascotaCreateStandaloneDTO;
 import com.example.hogwarts.dto.MascotaDTO;
 import com.example.hogwarts.service.MascotaService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/hogwarts/mascotas")
+@RequestMapping("/postgres/mascotas")
 public class MascotaController {
 
     private final MascotaService service;
@@ -27,5 +30,11 @@ public class MascotaController {
         return service.getByIdDTO(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<MascotaDTO> create(@Valid @RequestBody MascotaCreateStandaloneDTO dto) {
+        MascotaDTO created = service.createFromDTO(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hogwarts/casas")
+@RequestMapping("/postgres/casas")
 public class CasaController {
 
     private final CasaService service;

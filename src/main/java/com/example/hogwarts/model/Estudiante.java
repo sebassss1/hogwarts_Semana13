@@ -34,20 +34,16 @@ public class Estudiante {
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
 
-    // 🔗 Relación ManyToOne con Casa
     @ManyToOne
     @JoinColumn(name = "id_casa")
     @JsonBackReference
     private Casa casa;
 
-    // 🔗 Relación OneToOne con Mascota
-    @OneToOne(mappedBy = "estudiante", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "estudiante", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Mascota mascota;
 
-    // 🔗 Relación ManyToMany con Asignatura
-    @ManyToMany
-    @JoinTable(name = "estudiante_asignatura", joinColumns = @JoinColumn(name = "id_estudiante"), inverseJoinColumns = @JoinColumn(name = "id_asignatura"))
+    @OneToMany(mappedBy = "estudiante")
     @JsonManagedReference
-    private List<Asignatura> asignaturas;
+    private List<EstudianteAsignatura> asignaturas;
 }

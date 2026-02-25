@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hogwarts/profesores")
+@RequestMapping("/postgres/profesores")
 public class ProfesorController {
 
     private final ProfesorService service;

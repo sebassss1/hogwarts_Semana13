@@ -33,9 +33,7 @@ public class Asignatura {
     @JsonManagedReference
     private List<Profesor> profesores;
 
-    @ManyToMany(mappedBy = "asignaturas")
+    @OneToMany(mappedBy = "asignatura")
     @JsonBackReference
-    private List<Estudiante> estudiantes;
-
-    // getters y setters
+    private List<EstudianteAsignatura> estudiantes;
 }

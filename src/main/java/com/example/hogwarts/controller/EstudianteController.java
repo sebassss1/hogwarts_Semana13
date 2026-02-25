@@ -1,16 +1,19 @@
 package com.example.hogwarts.controller;
 
+import com.example.hogwarts.dto.EstudianteCreateDTO;
 import com.example.hogwarts.dto.EstudianteDTO;
-import com.example.hogwarts.model.Estudiante;
+import com.example.hogwarts.dto.EstudianteUpdateDTO;
 import com.example.hogwarts.service.EstudianteService;
+import jakarta.validation.Valid;
+import org.hibernate.annotations.SoftDelete;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hogwarts/estudiantes")
+@RequestMapping("/postgres/estudiantes")
 public class EstudianteController {
 
     private final EstudianteService service;
@@ -32,22 +35,23 @@ public class EstudianteController {
     }
 
     @PostMapping
-    public ResponseEntity<Estudiante> create(@RequestBody Estudiante s) {
-        Estudiante created = service.create(s);
-        return ResponseEntity.created(URI.create("/hogwarts/students/" + created.getIdEstudiante()))
-                .body(created);
+    public ResponseEntity<EstudianteDTO> create(@Valid @RequestBody EstudianteCreateDTO dto) {
+        EstudianteDTO created = service.createFromDTO(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Estudiante> update(@PathVariable Long id, @RequestBody Estudiante s) {
-        return service.update(id, s)
+    public ResponseEntity<EstudianteDTO> update(@PathVariable Long id, @Valid @RequestBody EstudianteUpdateDTO dto) {
+        return service.updateFromDTO(id, dto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    @SoftDelete
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean deleted = service.delete(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        //boolean deleted = service.delete(id);
+        //return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
